@@ -9,10 +9,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -103,13 +100,7 @@ function NewPatientDialog() {
         <Plus className="size-4" />
         Novo paciente
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Novo Paciente</DialogTitle>
-          <DialogDescription>
-            Preencha os dados do paciente para cadastrá-lo na clínica.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-md" title="Novo Paciente" description="Preencha os dados do paciente para cadastrá-lo na clínica.">
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-2">
             <div className="grid gap-2">
