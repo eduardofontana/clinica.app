@@ -1,5 +1,7 @@
+import { unauthorized } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { getUserOrRedirect, getClinicId } from "@/lib/auth"
+import { getUserOrRedirect, getClinicId, getUserRole } from "@/lib/auth"
+import { canManageClinic } from "@/lib/permissions"
 import { PageHeader } from "@/components/shared/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,8 +28,13 @@ export const metadata = {
 
 export default async function ConfiguracoesPage() {
   const supabase = await createClient()
-  await getUserOrRedirect()
+  const user = await getUserOrRedirect()
   const clinicId = await getClinicId()
+
+  const role = await getUserRole()
+  if (!canManageClinic(role)) {
+    unauthorized()
+  }
 
   if (!clinicId) {
     return (

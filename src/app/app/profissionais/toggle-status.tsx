@@ -10,11 +10,13 @@ import { createClient } from "@/lib/supabase/client"
 interface ToggleProfessionalStatusProps {
   professionalId: string
   currentActive: boolean
+  clinicId: string
 }
 
 function ToggleProfessionalStatus({
   professionalId,
   currentActive,
+  clinicId,
 }: ToggleProfessionalStatusProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -27,9 +29,11 @@ function ToggleProfessionalStatus({
         .from("professionals")
         .update({ active: !currentActive })
         .eq("id", professionalId)
+        .eq("clinic_id", clinicId)
 
       if (error) {
-        toast.error(`Erro ao alterar status: ${error.message}`)
+        console.error("Erro ao alterar status:", error.message)
+        toast.error("Erro ao alterar status")
         return
       }
 

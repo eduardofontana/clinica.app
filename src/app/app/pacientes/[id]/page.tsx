@@ -76,6 +76,7 @@ export default async function PatientDetailPage(props: PatientDetailPageProps) {
         patient={patient}
         appointments={appointments ?? []}
         quotes={quotes ?? []}
+        clinicId={clinicId}
       />
     </div>
   )

@@ -41,7 +41,8 @@ export default async function ProfessionalsPage() {
     .order("name", { ascending: true })
 
   if (error) {
-    throw new Error(`Falha ao carregar profissionais: ${error.message}`)
+    console.error("Falha ao carregar profissionais:", error.message)
+    throw new Error("Falha ao carregar profissionais")
   }
 
   return (
@@ -129,6 +130,7 @@ export default async function ProfessionalsPage() {
                     <ToggleProfessionalStatus
                       professionalId={professional.id}
                       currentActive={professional.active}
+                      clinicId={clinicId}
                     />
                   </div>
                 </CardContent>

@@ -1,15 +1,55 @@
 import type { NextConfig } from "next";
 
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' blob: data: https:;
+  font-src 'self';
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+  frame-src 'none';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  upgrade-insecure-requests;
+`;
+
 const nextConfig: NextConfig = {
   experimental: {
-    /**
-     * Habilita `unauthorized()` e `redirect()` como interrupções de navegação
-     * nativas no Next.js 16, substituindo `redirect()` de `next/navigation`
-     * para casos de autenticação e autorização.
-     *
-     * docs: https://nextjs.org/docs/app/api-reference/functions/unauthorized
-     */
     authInterrupts: true,
+  },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: cspHeader.replace(/\s{2,}/g, " ").trim(),
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
   },
 };
 

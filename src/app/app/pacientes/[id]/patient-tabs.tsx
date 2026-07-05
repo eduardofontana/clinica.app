@@ -34,9 +34,10 @@ interface PatientTabsProps {
   quotes: (Quote & {
     professional: { name: string } | null
   })[]
+  clinicId: string
 }
 
-function PatientTabs({ patient, appointments, quotes }: PatientTabsProps) {
+function PatientTabs({ patient, appointments, quotes, clinicId }: PatientTabsProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [activeTab, setActiveTab] = useState("dados-gerais")
@@ -62,7 +63,7 @@ function PatientTabs({ patient, appointments, quotes }: PatientTabsProps) {
 
       {/* ─── Dados Gerais Tab ─────────────────────────────────────── */}
       <TabsContent value="dados-gerais">
-        <PatientInfoForm patient={patient} />
+        <PatientInfoForm patient={patient} clinicId={clinicId} />
       </TabsContent>
 
       {/* ─── Consultas Tab ────────────────────────────────────────── */}
@@ -162,7 +163,7 @@ function PatientTabs({ patient, appointments, quotes }: PatientTabsProps) {
 }
 
 /* ─── Patient Info Edit Form ───────────────────────────────────── */
-function PatientInfoForm({ patient }: { patient: Patient }) {
+function PatientInfoForm({ patient, clinicId }: { patient: Patient; clinicId: string }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
@@ -186,9 +187,11 @@ function PatientInfoForm({ patient }: { patient: Patient }) {
             notes: (formData.get("notes") as string) || null,
           })
           .eq("id", patient.id)
+          .eq("clinic_id", clinicId)
 
         if (error) {
-          toast.error(`Erro ao atualizar paciente: ${error.message}`)
+          console.error("Erro ao atualizar paciente:", error.message)
+          toast.error("Erro ao atualizar paciente")
           return
         }
 
@@ -196,7 +199,7 @@ function PatientInfoForm({ patient }: { patient: Patient }) {
         router.refresh()
       })
     },
-    [patient.id, router],
+    [patient.id, clinicId, router],
   )
 
   return (

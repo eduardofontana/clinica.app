@@ -247,6 +247,7 @@ export default async function QuoteDetailPage(props: QuoteDetailPageProps) {
                 quoteStatus={quote.status}
                 publicLink={publicLink}
                 currentToken={quote.public_token}
+                clinicId={clinicId}
               />
             </CardContent>
           </Card>

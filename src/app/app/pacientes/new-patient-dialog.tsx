@@ -81,7 +81,8 @@ function NewPatientDialog() {
         })
 
         if (error) {
-          toast.error(`Erro ao criar paciente: ${error.message}`)
+          console.error("Erro ao criar paciente:", error.message)
+          toast.error("Erro ao criar paciente")
           return
         }
 

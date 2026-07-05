@@ -279,7 +279,8 @@ function QuoteForm({ patients, professionals, services }: QuoteFormProps) {
           .single()
 
         if (quoteError) {
-          toast.error(`Erro ao criar orçamento: ${quoteError.message}`)
+          console.error("Erro ao criar orçamento:", quoteError.message)
+          toast.error("Erro ao criar orçamento")
           return
         }
 
@@ -298,9 +299,8 @@ function QuoteForm({ patients, professionals, services }: QuoteFormProps) {
           .insert(itemsToInsert)
 
         if (itemsError) {
-          toast.error(
-            `Erro ao salvar itens do orçamento: ${itemsError.message}`,
-          )
+          console.error("Erro ao salvar itens do orçamento:", itemsError.message)
+          toast.error("Erro ao salvar itens do orçamento")
           return
         }
 

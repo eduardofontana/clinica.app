@@ -52,7 +52,8 @@ export default async function QuotesPage() {
     .order("created_at", { ascending: false })
 
   if (error) {
-    throw new Error(`Falha ao carregar orçamentos: ${error.message}`)
+    console.error("Falha ao carregar orçamentos:", error.message)
+    throw new Error("Falha ao carregar orçamentos")
   }
 
   return (

@@ -13,7 +13,8 @@ import { Loader2, SmilePlus } from "lucide-react"
 export default function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get("redirect") || "/app/dashboard"
+  const rawRedirect = searchParams.get("redirect")
+  const redirect = rawRedirect?.startsWith("/") ? rawRedirect : "/app/dashboard"
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -33,11 +34,7 @@ export default function LoginForm() {
     setLoading(false)
 
     if (authError) {
-      setError(
-        authError.message === "Invalid login credentials"
-          ? "Email ou senha inválidos."
-          : authError.message,
-      )
+      setError("Email ou senha inválidos.")
       return
     }
 

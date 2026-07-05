@@ -48,7 +48,8 @@ export default async function ServicesPage() {
     .order("name", { ascending: true })
 
   if (error) {
-    throw new Error(`Falha ao carregar serviços: ${error.message}`)
+    console.error("Falha ao carregar serviços:", error.message)
+    throw new Error("Falha ao carregar serviços")
   }
 
   return (

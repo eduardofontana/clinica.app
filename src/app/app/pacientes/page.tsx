@@ -49,13 +49,15 @@ export default async function PatientsPage(props: PatientsPageProps) {
     .order("created_at", { ascending: false })
 
   if (q) {
-    query = query.ilike("name", `%${q}%`)
+    const sanitized = q.replace(/%/g, "\\%").replace(/_/g, "\\_")
+    query = query.ilike("name", `%${sanitized}%`)
   }
 
   const { data: patients, error } = await query
 
   if (error) {
-    throw new Error(`Falha ao carregar pacientes: ${error.message}`)
+    console.error(`[DB] Falha ao carregar pacientes: ${error.message}`)
+    throw new Error("Falha ao carregar pacientes. Tente novamente.")
   }
 
   return (

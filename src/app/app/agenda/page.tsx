@@ -57,7 +57,8 @@ export default async function AgendaPage({
   const { data: appointments, error } = await query
 
   if (error) {
-    throw new Error(`Failed to fetch appointments: ${error.message}`)
+    console.error("Falha ao carregar agenda:", error.message)
+    throw new Error("Falha ao carregar agenda")
   }
 
   const hasAppointments = appointments && appointments.length > 0

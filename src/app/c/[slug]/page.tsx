@@ -64,7 +64,7 @@ export default async function ClinicPublicPage({
   // Fetch clinic
   const { data: clinic, error: clinicError } = await supabase
     .from("clinics")
-    .select("*")
+    .select("id, name, slug, description, logo_url, banner_url, address, phone, whatsapp_number, email")
     .eq("slug", slug)
     .single();
 
@@ -75,7 +75,7 @@ export default async function ClinicPublicPage({
   // Fetch active services
   const { data: services } = await supabase
     .from("services")
-    .select("*")
+    .select("id, name, description, duration_minutes, base_price, category")
     .eq("clinic_id", clinic.id)
     .eq("active", true)
     .order("name");
@@ -83,7 +83,7 @@ export default async function ClinicPublicPage({
   // Fetch active professionals
   const { data: professionals } = await supabase
     .from("professionals")
-    .select("*")
+    .select("id, name, specialty, photo_url, bio")
     .eq("clinic_id", clinic.id)
     .eq("active", true)
     .order("name");

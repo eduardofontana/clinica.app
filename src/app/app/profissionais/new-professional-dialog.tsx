@@ -81,7 +81,8 @@ function NewProfessionalDialog() {
         })
 
         if (error) {
-          toast.error(`Erro ao criar profissional: ${error.message}`)
+          console.error("Erro ao criar profissional:", error.message)
+          toast.error("Erro ao criar profissional")
           return
         }
 

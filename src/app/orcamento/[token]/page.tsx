@@ -90,7 +90,7 @@ export default async function QuotePublicPage({
   // Fetch quote
   const { data: quote, error: quoteError } = await supabase
     .from("quotes")
-    .select("*")
+    .select("id, clinic_id, patient_id, professional_id, title, description, total_amount, payment_terms, status, public_token, expires_at, approved_at, created_at")
     .eq("public_token", token)
     .single();
 
@@ -101,7 +101,7 @@ export default async function QuotePublicPage({
   // Fetch quote items
   const { data: items } = await supabase
     .from("quote_items")
-    .select("*")
+    .select("id, quote_id, name, description, quantity, unit_price, total_price")
     .eq("quote_id", quote.id)
     .order("id");
 
@@ -282,13 +282,30 @@ export default async function QuotePublicPage({
                 action={async () => {
                   "use server";
                   const supabase = await createClient();
+
+                  // Re-verify the token inside the action to prevent IDOR
+                  const { data: freshQuote } = await supabase
+                    .from("quotes")
+                    .select("id, status, public_token")
+                    .eq("public_token", token)
+                    .single();
+
+                  if (
+                    !freshQuote ||
+                    freshQuote.public_token !== token ||
+                    freshQuote.status === "aprovado" ||
+                    freshQuote.status === "recusado"
+                  ) {
+                    return;
+                  }
+
                   await supabase
                     .from("quotes")
                     .update({
                       status: "aprovado",
                       approved_at: new Date().toISOString(),
                     })
-                    .eq("id", quote.id);
+                    .eq("id", freshQuote.id);
                 }}
               >
                 <Button type="submit" size="lg" className="w-full text-base">

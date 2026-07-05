@@ -81,7 +81,8 @@ function NewServiceDialog() {
         })
 
         if (error) {
-          toast.error(`Erro ao criar serviço: ${error.message}`)
+          console.error("Erro ao criar serviço:", error.message)
+          toast.error("Erro ao criar serviço")
           return
         }
 

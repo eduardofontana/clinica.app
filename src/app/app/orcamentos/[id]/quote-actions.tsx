@@ -14,6 +14,7 @@ interface QuoteActionsProps {
   quoteStatus: string
   publicLink: string | null
   currentToken: string | null
+  clinicId: string
 }
 
 function QuoteActions({
@@ -21,6 +22,7 @@ function QuoteActions({
   quoteStatus,
   publicLink,
   currentToken,
+  clinicId,
 }: QuoteActionsProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -42,7 +44,8 @@ function QuoteActions({
           .eq("id", quoteId)
 
         if (tokenError) {
-          toast.error(`Erro ao enviar orçamento: ${tokenError.message}`)
+          console.error("Erro ao enviar orçamento:", tokenError.message)
+          toast.error("Erro ao enviar orçamento")
           return
         }
       } else {
@@ -52,7 +55,8 @@ function QuoteActions({
           .eq("id", quoteId)
 
         if (statusError) {
-          toast.error(`Erro ao enviar orçamento: ${statusError.message}`)
+          console.error("Erro ao enviar orçamento:", statusError.message)
+          toast.error("Erro ao enviar orçamento")
           return
         }
       }
@@ -94,9 +98,11 @@ function QuoteActions({
         .from("quotes")
         .delete()
         .eq("id", quoteId)
+        .eq("clinic_id", clinicId)
 
       if (error) {
-        toast.error(`Erro ao excluir orçamento: ${error.message}`)
+        console.error("Erro ao excluir orçamento:", error.message)
+        toast.error("Erro ao excluir orçamento")
         return
       }
 
