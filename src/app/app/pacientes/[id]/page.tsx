@@ -12,7 +12,7 @@ interface PatientDetailPageProps {
 export default async function PatientDetailPage(props: PatientDetailPageProps) {
   const { id } = await props.params
 
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {
@@ -33,32 +33,32 @@ export default async function PatientDetailPage(props: PatientDetailPageProps) {
     notFound()
   }
 
-  // Fetch patient appointments
-  const { data: appointments } = await supabase
-    .from("appointments")
-    .select(
-      `
-      *,
-      professional:professionals!inner(name, specialty),
-      service:services!left(name)
-    `,
-    )
-    .eq("patient_id", id)
-    .eq("clinic_id", clinicId)
-    .order("start_at", { ascending: false })
-
-  // Fetch patient quotes
-  const { data: quotes } = await supabase
-    .from("quotes")
-    .select(
-      `
-      *,
-      professional:professionals!left(name)
-    `,
-    )
-    .eq("patient_id", id)
-    .eq("clinic_id", clinicId)
-    .order("created_at", { ascending: false })
+  // Fetch patient appointments and quotes in parallel
+  const [{ data: appointments }, { data: quotes }] = await Promise.all([
+    supabase
+      .from("appointments")
+      .select(
+        `
+        *,
+        professional:professionals!inner(name, specialty),
+        service:services!left(name)
+      `,
+      )
+      .eq("patient_id", id)
+      .eq("clinic_id", clinicId)
+      .order("start_at", { ascending: false }),
+    supabase
+      .from("quotes")
+      .select(
+        `
+        *,
+        professional:professionals!left(name)
+      `,
+      )
+      .eq("patient_id", id)
+      .eq("clinic_id", clinicId)
+      .order("created_at", { ascending: false }),
+  ])
 
   return (
     <div>

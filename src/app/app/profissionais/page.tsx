@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server"
 import { getUserOrRedirect, getClinicId } from "@/lib/auth"
 import { PageHeader } from "@/components/shared/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -14,12 +13,12 @@ import {
 } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Stethoscope } from "lucide-react"
+import { Stethoscope } from "lucide-react"
 import { ToggleProfessionalStatus } from "./toggle-status"
 import { NewProfessionalDialog } from "./new-professional-dialog"
 
 export default async function ProfessionalsPage() {
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {

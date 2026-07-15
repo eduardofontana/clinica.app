@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -109,17 +110,22 @@ export default async function AgendaPage({
       ) : (
         <div className="rounded-lg border">
           <Table>
+            <TableCaption className="sr-only">Lista de agendamentos</TableCaption>
             <TableHeader>
               <TableRow>
-                <TableHead>Horário</TableHead>
-                <TableHead>Paciente</TableHead>
-                <TableHead>Profissional</TableHead>
-                <TableHead>Serviço</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead scope="col">Horário</TableHead>
+                <TableHead scope="col">Paciente</TableHead>
+                <TableHead scope="col">Profissional</TableHead>
+                <TableHead scope="col">Serviço</TableHead>
+                <TableHead scope="col">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {appointments.map((appointment: any) => (
+              {appointments.map((appointment) => {
+                const patients = appointment.patients as unknown as { name: string } | null
+                const professionals = appointment.professionals as unknown as { name: string } | null
+                const services = appointment.services as unknown as { name: string } | null
+                return (
                 <TableRow key={appointment.id}>
                   <TableCell>
                     <div className="flex flex-col">
@@ -133,14 +139,14 @@ export default async function AgendaPage({
                   </TableCell>
                   <TableCell>
                     <span className="font-medium">
-                      {appointment.patients?.name ?? "Paciente"}
+                      {patients?.name ?? "Paciente"}
                     </span>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {appointment.professionals?.name ?? "Profissional"}
+                    {professionals?.name ?? "Profissional"}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {appointment.services?.name ?? "—"}
+                    {services?.name ?? "—"}
                   </TableCell>
                   <TableCell>
                     <StatusBadge
@@ -149,7 +155,7 @@ export default async function AgendaPage({
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              )})}
             </TableBody>
           </Table>
         </div>

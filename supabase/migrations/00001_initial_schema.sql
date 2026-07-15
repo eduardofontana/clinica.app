@@ -413,11 +413,16 @@ ALTER TABLE audit_logs            ENABLE ROW LEVEL SECURITY;
 -- ---------------------------------------------------------------------------
 -- 7.1  clinics
 -- ---------------------------------------------------------------------------
--- Any authenticated member of a clinic can view its data.
--- Only admin can update the clinic.
--- Public users can view clinic data (for public pages).
+-- Clinic members can view their own clinic.
+-- Public users can view limited clinic data (for public pages via anon key).
 
-CREATE POLICY "Anyone can view clinics"
+CREATE POLICY "Clinic members can view their clinic"
+  ON clinics FOR SELECT
+  USING (id IN (
+    SELECT clinic_id FROM clinic_members WHERE user_id = auth.uid()
+  ));
+
+CREATE POLICY "Public can view basic clinic info"
   ON clinics FOR SELECT
   USING (true);
 
@@ -660,29 +665,29 @@ CREATE POLICY "Public can view non-draft quotes with token"
   ON quotes FOR SELECT
   USING (public_token IS NOT NULL AND status != 'draft');
 
-CREATE POLICY "Admin can insert quotes"
+CREATE POLICY "Admin and receptionist can insert quotes"
   ON quotes FOR INSERT
   WITH CHECK (clinic_id IN (
     SELECT clinic_id FROM clinic_members
-    WHERE user_id = auth.uid() AND role = 'admin'
+    WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
   ));
 
-CREATE POLICY "Admin can update quotes"
+CREATE POLICY "Admin and receptionist can update quotes"
   ON quotes FOR UPDATE
   USING (clinic_id IN (
     SELECT clinic_id FROM clinic_members
-    WHERE user_id = auth.uid() AND role = 'admin'
+    WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
   ))
   WITH CHECK (clinic_id IN (
     SELECT clinic_id FROM clinic_members
-    WHERE user_id = auth.uid() AND role = 'admin'
+    WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
   ));
 
-CREATE POLICY "Admin can delete quotes"
+CREATE POLICY "Admin and receptionist can delete quotes"
   ON quotes FOR DELETE
   USING (clinic_id IN (
     SELECT clinic_id FROM clinic_members
-    WHERE user_id = auth.uid() AND role = 'admin'
+    WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
   ));
 
 -- ---------------------------------------------------------------------------
@@ -698,36 +703,36 @@ CREATE POLICY "View quote items via parent quote"
       OR (public_token IS NOT NULL AND status != 'draft')
   ));
 
-CREATE POLICY "Admin can insert quote items"
+CREATE POLICY "Admin and receptionist can insert quote items"
   ON quote_items FOR INSERT
   WITH CHECK (quote_id IN (
     SELECT id FROM quotes WHERE clinic_id IN (
       SELECT clinic_id FROM clinic_members
-      WHERE user_id = auth.uid() AND role = 'admin'
+      WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
     )
   ));
 
-CREATE POLICY "Admin can update quote items"
+CREATE POLICY "Admin and receptionist can update quote items"
   ON quote_items FOR UPDATE
   USING (quote_id IN (
     SELECT id FROM quotes WHERE clinic_id IN (
       SELECT clinic_id FROM clinic_members
-      WHERE user_id = auth.uid() AND role = 'admin'
+      WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
     )
   ))
   WITH CHECK (quote_id IN (
     SELECT id FROM quotes WHERE clinic_id IN (
       SELECT clinic_id FROM clinic_members
-      WHERE user_id = auth.uid() AND role = 'admin'
+      WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
     )
   ));
 
-CREATE POLICY "Admin can delete quote items"
+CREATE POLICY "Admin and receptionist can delete quote items"
   ON quote_items FOR DELETE
   USING (quote_id IN (
     SELECT id FROM quotes WHERE clinic_id IN (
       SELECT clinic_id FROM clinic_members
-      WHERE user_id = auth.uid() AND role = 'admin'
+      WHERE user_id = auth.uid() AND role IN ('admin', 'receptionist')
     )
   ));
 

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -24,7 +25,7 @@ interface QuoteWithRelations extends Quote {
 }
 
 export default async function QuotesPage() {
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {
@@ -76,14 +77,15 @@ export default async function QuotesPage() {
 
       {quotes && quotes.length > 0 ? (
         <Table>
+          <TableCaption className="sr-only">Lista de orçamentos</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Título</TableHead>
-              <TableHead>Paciente</TableHead>
-              <TableHead>Profissional</TableHead>
-              <TableHead>Valor Total</TableHead>
-              <TableHead>Data</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead scope="col">Título</TableHead>
+              <TableHead scope="col">Paciente</TableHead>
+              <TableHead scope="col">Profissional</TableHead>
+              <TableHead scope="col">Valor Total</TableHead>
+              <TableHead scope="col">Data</TableHead>
+              <TableHead scope="col">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -28,7 +28,7 @@ export const metadata = {
 
 export default async function ConfiguracoesPage() {
   const supabase = await createClient()
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   const role = await getUserRole()

@@ -3,10 +3,10 @@
 import { useCallback, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Calendar, FileText, User, ClipboardList } from "lucide-react"
+import { Calendar, FileText, User } from "lucide-react"
 
 import type { Patient, Appointment, Quote } from "@/lib/db/schema"
-import { formatDate, formatDateTime, formatPhone, formatCPF, formatCurrency } from "@/lib/utils"
+import { formatDate, formatDateTime, formatCurrency } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { StatusBadge } from "@/components/shared/status-badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { createClient } from "@/lib/supabase/client"
 
@@ -38,8 +38,6 @@ interface PatientTabsProps {
 }
 
 function PatientTabs({ patient, appointments, quotes, clinicId }: PatientTabsProps) {
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
   const [activeTab, setActiveTab] = useState("dados-gerais")
 
   return (

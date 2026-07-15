@@ -2,26 +2,18 @@
 
 import type { FormEvent } from "react"
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, SmilePlus } from "lucide-react"
+import { Loader2, SmilePlus, CheckCircle2 } from "lucide-react"
 
-export default function LoginForm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const rawRedirect = searchParams.get("redirect")
-  const redirect =
-    rawRedirect && rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
-      ? rawRedirect
-      : "/app/dashboard"
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [sent, setSent] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -29,20 +21,41 @@ export default function LoginForm() {
     setLoading(true)
 
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/login`,
     })
 
     setLoading(false)
 
     if (authError) {
-      setError("Email ou senha inválidos.")
+      setError("Erro ao enviar e-mail. Verifique o endereço e tente novamente.")
       return
     }
 
-    router.push(redirect)
-    router.refresh()
+    setSent(true)
+  }
+
+  if (sent) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background to-muted/30 p-4">
+        <div className="w-full max-w-sm space-y-6 text-center">
+          <div className="flex justify-center">
+            <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <CheckCircle2 className="size-8" />
+            </div>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight">E-mail enviado</h1>
+          <p className="text-sm text-muted-foreground">
+            Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.
+          </p>
+          <Link href="/login">
+            <Button variant="outline" className="w-full">
+              Voltar para o login
+            </Button>
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -57,9 +70,9 @@ export default function LoginForm() {
             <span className="text-primary">Clinica</span>
             <span className="text-muted-foreground">.app</span>
           </Link>
-          <h1 className="mt-6 text-2xl font-bold tracking-tight">Entrar</h1>
+          <h1 className="mt-6 text-2xl font-bold tracking-tight">Esqueceu a senha?</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Acesse o painel da sua clínica
+            Informe seu e-mail para receber um link de redefinição.
           </p>
         </div>
 
@@ -81,36 +94,16 @@ export default function LoginForm() {
               autoComplete="email"
             />
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Senha</Label>
-              <Link href="/esqueci-senha" className="text-xs text-primary hover:underline">
-                Esqueceu a senha?
-              </Link>
-            </div>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-          </div>
           <Button type="submit" className="w-full" disabled={loading}>
             {loading && <Loader2 className="mr-2 size-4 animate-spin" />}
-            {loading ? "Entrando..." : "Entrar"}
+            {loading ? "Enviando..." : "Enviar link de redefinição"}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Não tem conta?{" "}
-          <Link
-            href="/register"
-            className="font-medium text-primary hover:underline"
-          >
-            Criar conta gratuita
+          Lembrou a senha?{" "}
+          <Link href="/login" className="font-medium text-primary hover:underline">
+            Voltar ao login
           </Link>
         </p>
       </div>

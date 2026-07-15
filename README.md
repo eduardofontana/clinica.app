@@ -26,7 +26,7 @@ e [Supabase](https://supabase.com).
 
 ---
 
-## Funcionalidades (MVP)
+## Funcionalidades
 
 - **Agenda inteligente** — Visualização diária, semanal e mensal com filtros
   por profissional e status da consulta.
@@ -42,6 +42,10 @@ e [Supabase](https://supabase.com).
   do Supabase.
 - **Controle de acesso** — Três níveis de permissão: admin, dentista e
   recepcionista.
+- **Esqueci a senha** — Fluxo completo de recuperação de senha com
+  redirecionamento e feedback visual.
+- **Logout seguro** — Página dedicada com confirmação antes de encerrar a
+  sessão.
 
 ---
 
@@ -119,34 +123,47 @@ Acesse [http://localhost:3000](http://localhost:3000) no navegador.
 clinica.app/
 ├── src/
 │   ├── app/                    # App Router (páginas e layouts)
+│   │   ├── auth/
+│   │   │   └── logout/         #   Página de logout
+│   │   ├── app/                #   Dashboard autenticado
+│   │   │   ├── agenda/         #   Agenda
+│   │   │   ├── configuracoes/  #   Configurações da clínica
+│   │   │   ├── orcamentos/     #   Orçamentos
+│   │   │   ├── pacientes/      #   Pacientes
+│   │   │   ├── profissionais/  #   Profissionais
+│   │   │   └── servicos/       #   Serviços
 │   │   ├── c/[slug]/           #   Página pública da clínica
 │   │   │   └── agendar/        #   Agendamento online
 │   │   ├── orcamento/[token]/  #   Página pública de orçamento
 │   │   ├── paciente/[token]/   #   Portal do paciente
+│   │   ├── esqueci-senha/      #   Recuperação de senha
+│   │   ├── login/              #   Login
+│   │   ├── register/           #   Cadastro
 │   │   ├── globals.css         #   Estilos globais (Tailwind)
-│   │   ├── layout.tsx          #   Root layout
+│   │   ├── layout.tsx          #   Root layout (skip-to-content)
+│   │   ├── error.tsx           #   Error boundary raiz
+│   │   ├── loading.tsx         #   Loading skeleton raiz
+│   │   ├── not-found.tsx       #   404
 │   │   └── page.tsx            #   Landing page
 │   ├── components/
+│   │   ├── layout/             #   Layout components (sidebar, etc.)
 │   │   ├── shared/             #   Componentes reutilizáveis
 │   │   └── ui/                 #   Componentes shadcn/ui
 │   ├── hooks/                  #   React hooks customizados
 │   └── lib/
-│       ├── db/
-│       │   └── schema.ts       #   TypeScript definitions do banco
 │       ├── supabase/
 │       │   ├── client.ts       #   Cliente Supabase (browser)
 │       │   ├── server.ts       #   Cliente Supabase (servidor)
 │       │   └── middleware.ts   #   Middleware de autenticação
-│       ├── auth.ts             #   Funções de autenticação
+│       ├── auth.ts             #   Funções de autenticação (getUserContext)
 │       ├── constants.ts        #   Constantes da aplicação
 │       ├── permissions.ts      #   Sistema de permissões RBAC
 │       └── utils.ts            #   Utilitários (cn, etc.)
 ├── supabase/
-│   ├── migrations/             #   Migrations SQL
-│   └── seed.sql                #   Dados de exemplo
+│   └── migrations/             #   Migrations SQL
 ├── public/                     #   Assets estáticos
 ├── .env.example                #   Template de variáveis de ambiente
-├── next.config.ts              #   Configuração do Next.js
+├── next.config.ts              #   Configuração do Next.js (CSP)
 ├── tsconfig.json               #   Configuração do TypeScript
 └── package.json                #   Dependências e scripts
 ```
@@ -155,12 +172,40 @@ clinica.app/
 
 ## Scripts disponíveis
 
-| Comando            | Descrição                                  |
-| ------------------ | ------------------------------------------ |
-| `npm run dev`      | Inicia o servidor de desenvolvimento       |
-| `npm run build`    | Compila o projeto para produção            |
-| `npm run start`    | Inicia o servidor de produção              |
-| `npm run lint`     | Executa o linter (ESLint)                  |
+| Comando              | Descrição                                  |
+| -------------------- | ------------------------------------------ |
+| `npm run dev`        | Inicia o servidor de desenvolvimento       |
+| `npm run build`      | Compila o projeto para produção            |
+| `npm run start`      | Inicia o servidor de produção              |
+| `npm run lint`       | Executa o linter (ESLint)                  |
+| `npx tsc --noEmit`   | Verificação de tipos (TypeScript)          |
+
+---
+
+## Segurança
+
+### Variáveis de ambiente
+
+- **Nunca** commite arquivos `.env`, `.env.local` ou `.env*.local`
+- `SUPABASE_SERVICE_ROLE_KEY` tem permissão total — use apenas em Server Actions
+- Variáveis `NEXT_PUBLIC_*` são expostas no cliente (normalize-as com `zod`)
+
+### Row Level Security (RLS)
+
+Todas as tabelas possuem RLS habilitado. As políticas garantem:
+
+- **Isolamento multi-tenant** — clínicas só veem seus próprios dados
+- **Controle de acesso** — `admin` e `receptionist` têm permissões específicas
+- **Proteção de dados** — profissionais inativos não aparecem em selects públicos
+
+### Boas práticas
+
+- CSRF tokens em mutations (middleware exists)
+- Rate limiting via Supabase
+- Input validation em Server Actions (zod schemas)
+- Content Security Policy (CSP) configurada no `next.config.ts`
+- Senhas com mínimo de 8 caracteres
+- Mensagens de erro genéricas (sem vazar detalhes do Supabase)
 
 ---
 

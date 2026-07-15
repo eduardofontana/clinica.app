@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { UserPlus, CalendarPlus, FilePlus } from "lucide-react"
+import { UserPlus, FilePlus } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -7,15 +7,9 @@ import { Button } from "@/components/ui/button"
 const actions = [
   {
     label: "Novo Paciente",
-    href: "/app/pacientes/novo",
+    href: "/app/pacientes",
     icon: UserPlus,
     variant: "default" as const,
-  },
-  {
-    label: "Nova Consulta",
-    href: "/app/agenda/novo",
-    icon: CalendarPlus,
-    variant: "outline" as const,
   },
   {
     label: "Novo Orçamento",
@@ -40,12 +34,10 @@ function QuickActions() {
               variant={action.variant}
               size="default"
               className="w-full justify-start gap-2"
-              
+              render={<Link href={action.href} />}
             >
-              <Link href={action.href}>
-                <Icon className="size-4" />
-                {action.label}
-              </Link>
+              <Icon className="size-4" />
+              {action.label}
             </Button>
           )
         })}

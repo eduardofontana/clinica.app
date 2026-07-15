@@ -43,9 +43,6 @@ export default async function AgendamentoConfirmadoPage() {
           <Link href="/">
             <Button variant="outline">Página inicial</Button>
           </Link>
-          <Link href="/c">
-            <Button>Voltar para clínica</Button>
-          </Link>
         </CardFooter>
       </Card>
     </div>

@@ -33,7 +33,7 @@ interface QuoteDetailPageProps {
 export default async function QuoteDetailPage(props: QuoteDetailPageProps) {
   const { id } = await props.params
 
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {

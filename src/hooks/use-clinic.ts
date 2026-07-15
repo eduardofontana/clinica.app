@@ -28,11 +28,10 @@ function useClinic(clinicId?: string): UseClinicReturn {
   const [error, setError] = useState<string | null>(null)
 
   const fetchClinic = useCallback(async () => {
-    try {
-      setIsLoading(true)
-      setError(null)
+    setIsLoading(true)
+    setError(null)
 
-      // If no clinicId is provided, try to fetch from the current session context
+    try {
       const url = clinicId
         ? `/api/clinics/${clinicId}`
         : `/api/clinics/current`
@@ -55,8 +54,46 @@ function useClinic(clinicId?: string): UseClinicReturn {
   }, [clinicId])
 
   useEffect(() => {
-    fetchClinic()
-  }, [fetchClinic])
+    let cancelled = false
+
+    async function load() {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const url = clinicId
+          ? `/api/clinics/${clinicId}`
+          : `/api/clinics/current`
+
+        const response = await fetch(url)
+
+        if (!response.ok) {
+          throw new Error("Falha ao carregar dados da clínica")
+        }
+
+        const data = await response.json()
+        if (!cancelled) {
+          setClinic(data)
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err.message : "Erro desconhecido ao carregar clínica"
+          )
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    load()
+
+    return () => {
+      cancelled = true
+    }
+  }, [clinicId])
 
   return { clinic, isLoading, error, refetch: fetchClinic }
 }

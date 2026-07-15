@@ -33,7 +33,7 @@ export default function RegisterPage() {
     setLoading(false)
 
     if (authError) {
-      setError(authError.message)
+      setError("Erro ao criar conta. Verifique seus dados e tente novamente.")
       return
     }
 
@@ -60,7 +60,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">
               {error}
             </div>
           )}
@@ -91,11 +91,11 @@ export default function RegisterPage() {
             <Input
               id="password"
               type="password"
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               autoComplete="new-password"
             />
           </div>

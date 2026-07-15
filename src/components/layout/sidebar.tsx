@@ -49,7 +49,7 @@ function SidebarNav({ className, onItemClick }: SidebarNavProps) {
   const pathname = usePathname()
 
   return (
-    <nav className={cn("flex flex-col gap-1", className)}>
+    <nav aria-label="Menu principal" className={cn("flex flex-col gap-1", className)}>
       {navItems.map((item) => {
         const Icon = item.icon
         const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
@@ -86,6 +86,7 @@ function Sidebar({ className }: SidebarProps) {
     <>
       {/* Desktop sidebar */}
       <aside
+        aria-label="Navegação principal"
         className={cn(
           "hidden w-60 shrink-0 border-r bg-sidebar md:flex md:flex-col",
           className

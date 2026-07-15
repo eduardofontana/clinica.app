@@ -10,12 +10,13 @@ import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Plus, Search, Users } from "lucide-react"
+import { Search, Users } from "lucide-react"
 import Link from "next/link"
 import { NewPatientDialog } from "./new-patient-dialog"
 
@@ -27,7 +28,7 @@ export default async function PatientsPage(props: PatientsPageProps) {
   const searchParams = await props.searchParams
   const q = searchParams.q?.trim() ?? ""
 
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {
@@ -97,12 +98,13 @@ export default async function PatientsPage(props: PatientsPageProps) {
       {/* Patients table */}
       {patients && patients.length > 0 ? (
         <Table>
+          <TableCaption className="sr-only">Lista de pacientes</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Telefone</TableHead>
-              <TableHead>E-mail</TableHead>
-              <TableHead>Data de Cadastro</TableHead>
+              <TableHead scope="col">Nome</TableHead>
+              <TableHead scope="col">Telefone</TableHead>
+              <TableHead scope="col">E-mail</TableHead>
+              <TableHead scope="col">Data de Cadastro</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

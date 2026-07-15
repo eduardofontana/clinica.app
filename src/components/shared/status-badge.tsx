@@ -1,5 +1,3 @@
-"use client"
-
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -90,7 +88,7 @@ function StatusBadge({
       className={cn(
         statusBadgeVariants({
           type,
-          status: status as any,
+          status: status as StatusBadgeVariantStatus,
           className,
         })
       )}

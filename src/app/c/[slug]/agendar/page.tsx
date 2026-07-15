@@ -24,21 +24,21 @@ export default async function BookingPage({
     notFound();
   }
 
-  // Fetch active services
-  const { data: services } = await supabase
-    .from("services")
-    .select("id, name, description, duration_minutes, base_price")
-    .eq("clinic_id", clinic.id)
-    .eq("active", true)
-    .order("name");
-
-  // Fetch active professionals
-  const { data: professionals } = await supabase
-    .from("professionals")
-    .select("id, name, specialty, photo_url")
-    .eq("clinic_id", clinic.id)
-    .eq("active", true)
-    .order("name");
+  // Fetch active services and professionals in parallel
+  const [{ data: services }, { data: professionals }] = await Promise.all([
+    supabase
+      .from("services")
+      .select("id, name, description, duration_minutes, base_price")
+      .eq("clinic_id", clinic.id)
+      .eq("active", true)
+      .order("name"),
+    supabase
+      .from("professionals")
+      .select("id, name, specialty, photo_url")
+      .eq("clinic_id", clinic.id)
+      .eq("active", true)
+      .order("name"),
+  ]);
 
   if (!services || services.length === 0) {
     return (

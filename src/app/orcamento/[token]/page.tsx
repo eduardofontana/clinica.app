@@ -5,45 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Phone, CheckCircle, Clock, ArrowLeft } from "lucide-react";
 
-// -- Types ----------------------------------------------------------------
-type Quote = {
-  id: string;
-  clinic_id: string;
-  patient_id: string;
-  professional_id: string | null;
-  title: string;
-  description: string | null;
-  total_amount: number;
-  payment_terms: string | null;
-  status: string;
-  public_token: string;
-  expires_at: string | null;
-  approved_at: string | null;
-  created_at: string;
-};
-
-type QuoteItem = {
-  id: string;
-  quote_id: string;
-  name: string;
-  description: string | null;
-  quantity: number;
-  unit_price: number;
-  total_price: number;
-};
-
-type Clinic = {
-  name: string;
-  logo_url: string | null;
-  whatsapp_number: string | null;
-  phone: string | null;
-};
-
-type Patient = {
-  name: string;
-  phone: string | null;
-};
-
 type Professional = {
   name: string;
   specialty: string | null;

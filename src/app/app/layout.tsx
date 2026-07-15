@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 import { DashboardLayout } from "@/components/layout/dashboard-layout"
-import { getUserOrRedirect, getClinicId } from "@/lib/auth"
+import { getUserContext } from "@/lib/auth"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
@@ -16,10 +16,12 @@ export default async function AppLayout({
 }: {
   children: React.ReactNode
 }) {
-  const user = await getUserOrRedirect()
-  const clinicId = await getClinicId()
+  const { user } = await getUserContext()
 
-  // Fetch user profile data from the public users table
+  if (!user) {
+    return <>{children}</>
+  }
+
   const supabase = await createClient()
   const { data: profile } = await supabase
     .from("users")

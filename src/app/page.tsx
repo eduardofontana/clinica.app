@@ -9,10 +9,9 @@ import {
   ArrowRight,
   CheckCircle2,
   Sparkles,
-  Shield,
-  Smartphone,
   BarChart3,
   SmilePlus,
+  Menu,
 } from "lucide-react"
 
 const features = [
@@ -65,7 +64,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navigation */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-lg dark:bg-background/80">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight">
             <SmilePlus className="size-6 text-primary" />
@@ -84,12 +83,17 @@ export default function HomePage() {
             </Link>
           </nav>
           <div className="flex items-center gap-3">
-            <Link href="/login">
+            <Link href="/login" className="hidden sm:block">
               <Button variant="ghost" size="sm">Entrar</Button>
             </Link>
             <Link href="/register">
               <Button size="sm">Começar grátis</Button>
             </Link>
+            <div className="md:hidden">
+              <Button variant="ghost" size="icon" aria-label="Menu">
+                <Menu className="size-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -99,7 +103,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40 relative">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border bg-white/50 px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border bg-background/50 px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
               <Sparkles className="size-3.5 text-primary" />
               Plataforma digital completa para clínicas odontológicas
             </div>
@@ -131,7 +135,7 @@ export default function HomePage() {
         </div>
         {/* Stats */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 rounded-2xl border bg-white/50 p-8 backdrop-blur-sm">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 rounded-2xl border bg-background/50 p-8 backdrop-blur-sm">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-3xl sm:text-4xl font-bold text-primary">{stat.value}</div>
@@ -155,7 +159,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, index) => {
+            {features.map((feature) => {
               const Icon = feature.icon
               return (
                 <div
@@ -218,10 +222,10 @@ export default function HomePage() {
                   </div>
                 </div>
                 <blockquote className="text-muted-foreground italic leading-relaxed">
-                  "A Clinica.app transformou a gestão do meu consultório. Reduzi em 70% o
-                  trabalho manual da recepção e meus pacientes amam o portal. Recomendo de olhos fechados."
+                  &ldquo;A Clinica.app transformou a gestão do meu consultório. Reduzi em 70% o
+                  trabalho manual da recepção e meus pacientes amam o portal. Recomendo de olhos fechados.&rdquo;
                 </blockquote>
-                <div className="mt-4 flex gap-1 text-amber-400">
+                <div className="mt-4 flex gap-1 text-amber-400" role="img" aria-label="5 de 5 estrelas">
                   {"★★★★★"}
                 </div>
               </div>
@@ -298,7 +302,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-10 border-t pt-6 text-center text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Clinica.app. Todos os direitos reservados.
+            &copy; 2026 Clinica.app. Todos os direitos reservados.
           </div>
         </div>
       </footer>

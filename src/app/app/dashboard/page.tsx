@@ -43,7 +43,7 @@ export default async function DashboardPage() {
     { count: todayCompletedCount },
     { count: newPatientsCount },
     { count: pendingQuotesCount },
-    { count: approvedQuotesCount },
+    { count: _approvedQuotesCount },
     todayAppointmentsResult,
     recentQuotesResult,
   ] = await Promise.all([

@@ -265,7 +265,7 @@ export function BookingFlow({
           service_id: selectedServiceId,
           start_at: startAt.toISOString(),
           end_at: endAt.toISOString(),
-          status: "agendada",
+          status: "scheduled",
         });
 
       if (appointmentError) {

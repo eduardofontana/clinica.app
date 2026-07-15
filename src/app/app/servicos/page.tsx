@@ -6,15 +6,6 @@ import { formatCurrency, formatDuration } from "@/lib/utils"
 import { PageHeader } from "@/components/shared/page-header"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import {
   Card,
   CardContent,
@@ -22,11 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Plus, Stethoscope } from "lucide-react"
+import { Stethoscope } from "lucide-react"
 import { NewServiceDialog } from "./new-service-dialog"
 
 export default async function ServicesPage() {
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {

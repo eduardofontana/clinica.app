@@ -5,36 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, Phone, ArrowRight } from "lucide-react";
 
-// -- Types ----------------------------------------------------------------
-type Clinic = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  logo_url: string | null;
-  banner_url: string | null;
-  address: string | null;
-  phone: string | null;
-  whatsapp_number: string | null;
-  email: string | null;
-};
+export const revalidate = 3600;
 
-type Service = {
-  id: string;
-  name: string;
-  description: string | null;
-  duration_minutes: number;
-  base_price: number | null;
-  category: string | null;
-};
-
-type Professional = {
-  id: string;
-  name: string;
-  specialty: string | null;
-  photo_url: string | null;
-  bio: string | null;
-};
+export async function generateStaticParams() {
+  const supabase = await createClient();
+  const { data: clinics } = await supabase.from("clinics").select("slug");
+  return (clinics ?? []).map((c) => ({ slug: c.slug }));
+}
 
 // -- Helpers --------------------------------------------------------------
 function formatPrice(value: number | null): string {
@@ -72,21 +49,21 @@ export default async function ClinicPublicPage({
     notFound();
   }
 
-  // Fetch active services
-  const { data: services } = await supabase
-    .from("services")
-    .select("id, name, description, duration_minutes, base_price, category")
-    .eq("clinic_id", clinic.id)
-    .eq("active", true)
-    .order("name");
-
-  // Fetch active professionals
-  const { data: professionals } = await supabase
-    .from("professionals")
-    .select("id, name, specialty, photo_url, bio")
-    .eq("clinic_id", clinic.id)
-    .eq("active", true)
-    .order("name");
+  // Fetch active services and professionals in parallel
+  const [{ data: services }, { data: professionals }] = await Promise.all([
+    supabase
+      .from("services")
+      .select("id, name, description, duration_minutes, base_price, category")
+      .eq("clinic_id", clinic.id)
+      .eq("active", true)
+      .order("name"),
+    supabase
+      .from("professionals")
+      .select("id, name, specialty, photo_url, bio")
+      .eq("clinic_id", clinic.id)
+      .eq("active", true)
+      .order("name"),
+  ]);
 
   const workingHours = [
     { day: "Segunda a Sexta", hours: "08:00 — 18:00" },

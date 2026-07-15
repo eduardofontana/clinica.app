@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/shared/page-header"
 import { QuoteForm } from "./quote-form"
 
 export default async function NewQuotePage() {
-  const user = await getUserOrRedirect()
+  await getUserOrRedirect()
   const clinicId = await getClinicId()
 
   if (!clinicId) {

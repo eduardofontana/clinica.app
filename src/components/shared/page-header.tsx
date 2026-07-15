@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 
@@ -39,12 +40,12 @@ function PageHeader({
                   </span>
                 )}
                 {item.href && !isLast ? (
-                  <a
+                  <Link
                     href={item.href}
                     className="transition-colors hover:text-foreground"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 ) : (
                   <span
                     className={cn(
